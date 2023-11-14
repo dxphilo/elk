@@ -26,6 +26,7 @@ async fn imagekit_handler() -> impl Responder {
         signature: "0f9d5a45e97c24fa9200a9d5543c9af1e2c45a54".to_string(),
     };
 
+    println!("{:?}", auth_res);
     HttpResponse::Ok().json(auth_res)
 }
 
