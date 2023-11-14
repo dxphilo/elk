@@ -3,7 +3,7 @@ pub mod util;
 use actix_cors::Cors;
 use actix_web::{get, App, HttpResponse, HttpServer, Responder};
 use serde::Serialize;
-use util::time_in_seconds;
+use util::{time_in_seconds, gen_signature};
 use uuid::Uuid;
 
 #[get("/health")]
@@ -20,10 +20,12 @@ struct AuthResponse {
 
 #[get("/imagekit")]
 async fn imagekit_handler() -> impl Responder {
+    let token = Uuid::new_v4().to_string();
+    let expire = time_in_seconds();
     let auth_res = AuthResponse {
-        token: Uuid::new_v4().to_string(),
-        expire: time_in_seconds(),
-        signature: "0f9d5a45e97c24fa9200a9d5543c9af1e2c45a54".to_string(),
+        token: token.to_string(),
+        expire,
+        signature: gen_signature(token,expire),
     };
 
     println!("{:?}", auth_res);
